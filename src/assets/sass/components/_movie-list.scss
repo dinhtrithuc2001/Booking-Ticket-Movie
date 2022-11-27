@@ -1,0 +1,67 @@
+.movie-list {
+    .film-name-card-mobile {
+        font-size: 11px;
+
+        @include responsive('sm'){
+            font-size: 10px;
+        }
+    }
+    .ant-tabs-tab-btn {
+        border: none;
+        color: #888a8b;
+        text-transform: uppercase;
+        font-size: 18px;
+        font-weight: 500;
+
+        @include responsive('lg'){
+            font-size: 16px;
+        }
+        @include responsive('md'){
+            font-size: 14px;
+        }
+        @include responsive('sm'){
+            font-size: 12px;
+        }
+    }
+
+    .ant-tabs-tab-btn:hover {
+        color: #43464b;
+    }
+
+    .ant-tabs-ink-bar {
+        background-color: #f26b38 !important;
+    }
+
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+        color: #43464b !important;
+        text-shadow: 0 0 .25px currentcolor;
+    }
+    .ant-tabs-nav {
+        width: 50%;
+    }
+    @include responsive('lg'){
+        .ant-tabs-nav{
+            width: 100%;
+        }
+    }
+    
+
+    // slider react-slick
+    .slick-slider {
+        .slick-next:before , .slick-prev:before{
+            color: #f26b38;
+            font-size: 42px !important;
+            opacity: 1;
+        }
+        .slick-arrow {
+            z-index: 1;
+            top: 48.5%;
+        }
+        .slick-next {
+            right: 0;
+        }
+        .slick-prev {
+            left: -20px;
+        }
+    }
+}

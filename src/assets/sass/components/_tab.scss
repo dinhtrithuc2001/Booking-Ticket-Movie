@@ -1,0 +1,55 @@
+.MenuCinemaTabs>.ant-tabs.ant-tabs-left {
+    width: 1024px;
+    margin: auto;
+    display: flex;
+    max-height: 700px;
+    margin-bottom: 40px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.MenuCinemaTabs {
+    .ant-tabs-content-holder {
+        .ant-tabs-content.ant-tabs-content-left{
+            .ant-tabs.ant-tabs-left{
+                .ant-tabs-content-holder{
+                    .ant-tabs-content.ant-tabs-content-left {
+                        .ant-tabs.ant-tabs-left{
+                            .ant-tabs-nav {
+                                .ant-tabs-nav-wrap{
+                                    overflow: auto;
+                                    max-height: 680px;
+                                    overflow-y: hidden;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+    .ant-tabs>.ant-tabs-nav .ant-tabs-nav-operations, .ant-tabs>div>.ant-tabs-nav .ant-tabs-nav-operations{
+        display: none;
+    }
+    .ant-tabs-left>.ant-tabs-content-holder>.ant-tabs-content>.ant-tabs-tabpane, .ant-tabs-left>div>.ant-tabs-content-holder>.ant-tabs-content>.ant-tabs-tabpane{
+        padding-left: 0 !important;
+    }
+}
+
+.MenuCinemaTabs {
+    .ant-tabs.ant-tabs-left{
+        .ant-tabs-content-holder{
+            .ant-tabs-content.ant-tabs-content-left{
+                .ant-tabs.ant-tabs-left{
+                    .ant-tabs-content-holder{
+                        .ant-tabs-content.ant-tabs-content-left{
+                            .ant-tabs.ant-tabs-left{
+                                display: block !important;
+                            }
+                        }
+                    }
+                } 
+            }
+        }
+    }
+}

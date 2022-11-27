@@ -1,0 +1,24 @@
+// Footer
+footer {
+    .title-widget {
+        line-height: 1;
+        position: relative;
+        margin: 0 0 25px 0;
+        padding-left: 16px;
+        &::before{
+            background-color: $ColorPrimary;
+            content: "";
+            height: 22px;
+            left: 0;
+            position: absolute;
+            top: -2px;
+            width: 4px;
+        }
+    }
+    .title-widget-item {
+        font-size: 14px;
+        &:hover{
+            color: $ColorPrimary;
+        }
+    }
+}
