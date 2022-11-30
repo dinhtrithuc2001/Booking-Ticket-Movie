@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
@@ -18,8 +18,9 @@ export default () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
-
+    
     useEffect(() => {
+       
         const callApiThongTinTaiKhoan = async () => {
             try {
                 await LayThongTinTaiKhoan()
@@ -39,7 +40,7 @@ export default () => {
                 document.getElementById('navBarHeader').style.background = '#fff'
             }
         })
-        
+
     }, [])
 
     const showDrawer = () => {
@@ -156,11 +157,11 @@ export default () => {
                         id="nav-content">
                         <ul className="list-reset lg:flex justify-center flex-1 items-center mb-0">
                             <li className="mr-3">
-                                <NavLink className="inline-block py-2 px-4 text-black font-medium md:text-base hover:text-red-600 no-underline" to=''>Lịch chiếu</NavLink>
+                                <Link to='/#movie-list' className="inline-block py-2 px-4 text-black font-medium md:text-base hover:text-red-600 no-underline" >Lịch chiếu</Link>
                             </li>
                             <li className="mr-3">
-                                <NavLink className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                                    to=''>Cụm rạp</NavLink>
+                                <Link className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"
+                                    to="/#menuCinema">Cụm rạp</Link>
                             </li>
                             <li className="mr-3">
                                 <NavLink className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"

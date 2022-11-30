@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import useRoute from '../hooks/useRoute'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { kiemTraRong, kiemTraDinhDang, kiemTraDoDai } from '../utils/validation';
@@ -14,7 +14,7 @@ export default function Login() {
 
     const dispatch = useDispatch()
 
-    const navigate = useNavigate()
+    const {navigate} = useRoute()
 
     const [state, setState] = useState({
         nguoiDung: {

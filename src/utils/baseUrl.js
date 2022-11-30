@@ -19,6 +19,5 @@ http.interceptors.request.use(config => {
             Authorization: `${token ? `Bearer ${token.accessToken}` : ''}`,
             tokenCyberSoft: TOKEN
         }
-        
     }
 })

@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { LayDanhSachPhim } from '../../services/FilmService';
+import { LayDanhSachPhim, LayThongTinLichChieu, LayThongTinPhimChiTiet } from '../../services/FilmService';
+import {history} from '../../utils/history'
 
 const initialState = {
     arrFilm: [],
-
+    filmDetail : null,
+    lichChieuTheoPhim: null
 }
 
 const FilmReducer = createSlice({
@@ -12,19 +14,26 @@ const FilmReducer = createSlice({
     reducers: {
         getFilmList: (state, { type, payload }) => {
             state.arrFilm = payload
+        },
+        getfilmDetail : (state, {type, payload}) => {
+            state.filmDetail = payload
+        },
+        getLichChieuTheoPhim: (state, {type, payload}) => {
+            state.lichChieuTheoPhim = payload
         }
     }
 });
 
-export const { getFilmList } = FilmReducer.actions
+export const { getFilmList, getfilmDetail,getLichChieuTheoPhim } = FilmReducer.actions
 
 export default FilmReducer.reducer
 
-export const callApiFilmList = () => async (dispatch) => {
+
+export const callApiLichChieuTheoPhim = (value) => async(dispatch) => {
     try {
-        const apiFilmList = await LayDanhSachPhim()
-        dispatch(getFilmList(apiFilmList.data.content))
+        const apiLichChieu = await LayThongTinLichChieu(value)
+        dispatch(getLichChieuTheoPhim(apiLichChieu.data.content))
     } catch (error) {
-        alert(error)
+        console.log(error)
     }
 }
