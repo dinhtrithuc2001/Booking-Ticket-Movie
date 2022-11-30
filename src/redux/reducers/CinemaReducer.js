@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { LayThongTinLichChieuHeThongRap } from '../../services/CinemaServiec';
 
 const initialState = {
-    heThongRapChieu: []
+    heThongRapChieu: [],
 }
 
 const CinemaReducer = createSlice({
@@ -18,13 +18,3 @@ const CinemaReducer = createSlice({
 export const {LayHeThongRapChieu} = CinemaReducer.actions
 
 export default CinemaReducer.reducer
-
-export const getApiHeThongRapChieu = () => async (dispatch) =>{
-    try {
-        const apiHeThongRap = await LayThongTinLichChieuHeThongRap()
-        dispatch(LayHeThongRapChieu(apiHeThongRap.data.content))
-    } catch (error) {
-        alert(error)
-    }
-
-}

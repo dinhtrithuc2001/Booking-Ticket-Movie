@@ -1,99 +1,40 @@
 import React, { useEffect, useState } from 'react'
 import { Tabs } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { callApiFilmList } from '../../redux/reducers/FilmReducer';
 import MultipleRowSlick from './MultipleRowSlick';
-import axios from 'axios';
-import moment from 'moment';
-import { LayThongTinLichChieu } from '../../services/FilmService';
+import BookingTicketNow from './BookingTicketNow';
+import { useLocation } from 'react-router-dom';
+import useRoute from '../../hooks/useRoute';
 
-export default function MovieList() {
-    const dispatch = useDispatch()
-    const { arrFilm } = useSelector(state => state.FilmReducer)
-    const [arrCumRapSearch, setArrCumRapSearch] = useState(null)
-    const [arrLichChieuPhimSearch, setArrLichChieuPhimSearch] = useState(null)
+
+export default function MovieList(props) {
+    const { arrFilm } = props
     const [keyword, setKeyword] = useState('')
+    const {navigate} = useRoute()
+
+    const location = useLocation()
 
     useEffect(() => {
-        dispatch(callApiFilmList())
-    }, [])
-
-    const layDanhSachCumRap = (heThongRap) => {
-        const cumRapChieu = []
-        heThongRap?.map(item => {
-            item.cumRapChieu?.map(cumRap => {
-                cumRapChieu.push(cumRap)
-            })
-        })
-        return [...cumRapChieu]
-    }
-
-    const handleChangeFilmSearch = (e) => {
-        if (e.target.value == 'Phim') {
-            setArrCumRapSearch(null)
-            setArrLichChieuPhimSearch(null)
-        }
-        else {
-            const callApiLichChieuTheoPhim = async (value) => {
-                try {
-                    const apiLichChieu = await LayThongTinLichChieu(value)
-                    setArrCumRapSearch(null)
-                    setArrLichChieuPhimSearch(null)
-                    setArrCumRapSearch(layDanhSachCumRap(apiLichChieu.data.content.heThongRapChieu))
-                } catch (error) {
-                    console.log(error)
-                }
+        if (location.hash) {
+            let elem = document.getElementById(location.hash.slice(1))
+            if (elem) {
+                elem.scrollIntoView({ behavior: "smooth" })
             }
-            callApiLichChieuTheoPhim(e.target.value)
-        }
-    };
-
-    const handleChangeCumRap = (e) => {
-        if (e.target.value == 'Rạp') {
-            setArrLichChieuPhimSearch(null)
         } else {
-            setArrLichChieuPhimSearch(JSON.parse(e.target.value))
+            window.scrollTo({ top: 0, left: 0, behavior: "smooth" })
         }
-    }
-
-    const handleBookingNow = () => {
-        alert(document.getElementById('maLichChieuPhim').value)
-    }
-
+    }, [location,])
 
     return (
-        <div className="movie-list container mx-auto md:px-8 lg:px-10">
-            <div className=' bg-white rounded-lg shadow-2xl text-white py-7 px-8 w-full xl:w-3/4 mx-auto translate-y-[-50%] hidden md:block'>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-7 gap-2">
-                    <select onChange={handleChangeFilmSearch} className='text-black border-2 rounded-md border-slate-600 cursor-pointer 2xl:col-span-2 h-[2.5rem]'>
-                        <option defaultValue='Phim'>Phim</option>
-                        {arrFilm?.map((item, index) => <option key={index} value={item.maPhim}>{item.tenPhim}</option>)}
-                    </select>
+        <div id='movie-list' className="movie-list container mx-auto md:px-8 lg:px-10">
 
-                    <select onChange={handleChangeCumRap} className='text-black border-2 rounded-md border-slate-600 cursor-pointer 2xl:col-span-2 h-[2.5rem]'>
-                        <option defaultValue='Rạp'>Rạp</option>
-                        {arrCumRapSearch?.map((item, index) => {
-                            return <option key={index} value={JSON.stringify(item.lichChieuPhim)}>{item.tenCumRap}</option>
-                        })}
-                    </select>
+            {/* Laptop */}
+            <BookingTicketNow />
+            <Tabs className='hidden md:block' defaultActiveKey="1" items={[
+                { label: 'Phim đang chiếu', key: '1', children: <MultipleRowSlick status={false} arrFilm={arrFilm} /> },
+                { label: 'Phim sắp chiếu', key: '2', children: <MultipleRowSlick status={true} arrFilm={arrFilm} /> },
+            ]} />
 
-                    <select id='maLichChieuPhim' className='text-black border-2 rounded-md border-slate-600 cursor-pointer 2xl:col-span-2 h-[2.5rem]'>
-                        <option defaultValue='Ngày giờ chiếu' >Ngày giờ chiếu</option>
-                        {arrLichChieuPhimSearch?.map((item, index) => <option key={index} value={item.maLichChieu}>{moment(item.ngayChieuGioChieu
-                        ).format('DD-MM-YYYY ~ hh:mm A')}</option>)}
-                    </select>
-
-                    <button onClick={handleBookingNow} className='p-2 bg-orange-400 rounded-md font-semibold tracking-wide h-[2.5rem]'>Đặt Vé Nhanh</button>
-                </div>
-            </div>
-            <Tabs className='hidden md:block' defaultActiveKey="1">
-                <Tabs.TabPane tab="Phim đang chiếu" key="1">
-                    <MultipleRowSlick status={false} arrFilm={arrFilm} />
-                </Tabs.TabPane>
-                <Tabs.TabPane tab="Phim sắp chiếu" key="2">
-                    <MultipleRowSlick status={true} arrFilm={arrFilm} />
-                </Tabs.TabPane>
-            </Tabs>
+            {/* Mobile */}
             <div className='block mt-16 sm:mt-8 md:mt-0 md:hidden'>
                 <div className="relative mb-4">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 ">
@@ -115,7 +56,7 @@ export default function MovieList() {
                         <img src={itemFilm.hinhAnh} alt={itemFilm.hinhAnh} onError={(e) => { e.target.onerror = null; e.target.src = 'https://picsum.photos/75/75' }} className="object-cover object-center w-full rounded-t-md h-44 sm:h-52 " />
                         <div className="flex flex-col justify-between p-4 ">
                             <h2 className="film-name-card-mobile font-semibold mb-2">{itemFilm.tenPhim.length > 22 ? itemFilm.tenPhim.toUpperCase().slice(0, 22) + '...' : itemFilm.tenPhim.toUpperCase()}</h2>
-                            <button type="button" className="flex items-center justify-center w-full p-2 sm:p-3 font-semibold rounded-md bg-yellow-500 text-gray-50">Đặt vé</button>
+                            <button  onClick={()=> navigate(`detail/${itemFilm.maPhim}`)} className="flex items-center justify-center w-full p-2 sm:p-3 font-semibold rounded-md bg-yellow-500 text-gray-50">Đặt vé</button>
                         </div>
                     </div>)}
                 </div>

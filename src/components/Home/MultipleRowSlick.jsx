@@ -1,9 +1,12 @@
 import React from 'react'
 import { Card } from 'antd';
 import Slider from "react-slick";
+import useRoute from '../../hooks/useRoute';
+
 
 
 export default function MultipleRowSlick(props) {
+    const {navigate} = useRoute()
 
     const arrFilm = [...props.arrFilm]
 
@@ -39,7 +42,7 @@ export default function MultipleRowSlick(props) {
         rows: 2,
         slidesPerRow: 1,
         slidesToScroll: 1,
-        initialSlide: 1,
+        initialSlide: 2,
         dots: false,
         responsive: [
             {
@@ -83,7 +86,7 @@ export default function MultipleRowSlick(props) {
                                 <div className="flip-card-back">
                                     <div className='overlay-card-back'></div>
                                     <img src={film.hinhAnh} className='w-full h-full' alt={film.hinhAnh} onError={(e) => { e.target.onerror = null; e.target.src = 'https://picsum.photos/75/75' }} />
-                                    <button className='btn-card text-base uppercase'>Mua Vé</button>
+                                    <button onClick={()=> navigate(`detail/${film.maPhim}`)} className='btn-card text-base uppercase'>Mua Vé</button>
                                 </div>
                             </div>
                         </div>
