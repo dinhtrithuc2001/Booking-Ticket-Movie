@@ -63,7 +63,7 @@ export default function Detail() {
                             <img className='w-36 md:w-32 h-full' src={filmDetail.hinhAnh} alt={filmDetail.hinhAnh} />
                             <div className='md:pl-8 '>
                                 <h2 className='text-white tracking-wide text-[1rem] md:text-[1.3rem] lg:text-[1.5rem] uppercase mb-3 font-semibold'>{filmDetail.tenPhim}</h2>
-                                <p className='text-gray-300 tracking-wide text-justify'>{filmDetail.moTa.length > 400 ? filmDetail.moTa.slice(0, 400) + '...' : filmDetail.moTa}</p>
+                                <p className='text-gray-300 tracking-wide text-justify'>{filmDetail.moTa.length > 300 ? filmDetail.moTa.slice(0, 300) + '...' : filmDetail.moTa}</p>
                                 <p className='font-bold text-white mt-2'>{moment(filmDetail.ngayKhoiChieu).format("DD-MM-YYYY")}</p>
                                 <div className='hidden xl:block'>
                                     <button onClick={() => showModal(filmDetail.trailer)} className="bg-transparent tracking-widest text-[16px] hover:bg-blue-500 text-white font-semibold hover:text-white border-blue-500 border-[3px] hover:border-transparent rounded uppercase px-[5rem] py-[0.7rem] mt-4 ">

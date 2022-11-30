@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import InforUser from './pages/InforUser';
 import Detail from './pages/Detail';
 import NotFound from './pages/NotFound';
+import AboutApp from './pages/AboutApp';
+import News from './pages/News';
 
 function App() {
     return (
@@ -21,6 +23,8 @@ function App() {
                     <Route path='inforUser' element={<InforUser />} />
                     <Route path='login' element={<Login />} />
                     <Route path='register' element={<Register />} />
+                    <Route path='aboutapp' element={<AboutApp />} />
+                    <Route path='news' element={<News />} />
                 </Route>
                 <Route path='/admin' element={<AdminTemplate />}></Route>    
             </Routes>

@@ -116,25 +116,22 @@ export default () => {
                 <hr />
                 <ul className="list-reset justify-center flex-1 items-center mt-2">
                     <li className="mr-3">
-                        <NavLink className="block py-2 px-4 text-black font-medium text-base hover:text-red-600 no-underline" to=''>Lịch chiếu</NavLink>
+                        <NavLink to='/' className="block py-2 px-4 text-black font-medium text-base hover:text-red-600 no-underline" >Lịch chiếu</NavLink>
                     </li>
                     <li className="mr-3">
                         <NavLink className="block no-underline text-black font-medium text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                            to=''>Cụm rạp</NavLink>
+                            to='/'>Cụm rạp</NavLink>
                     </li>
                     <li className="mr-3">
                         <NavLink className="block no-underline text-black font-medium text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                            to=''>Tin tức</NavLink>
+                            to='news'>Tin tức</NavLink>
                     </li>
-                    <li className="mr-3">
-                        <NavLink className="block no-underline text-black font-medium text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                            to=''>Ứng dụng</NavLink>
-                    </li>
+                    
                 </ul>
             </Drawer>
 
             <header className="bg-gray-400 font-sans leading-normal tracking-normal">
-                <nav id='navBarHeader' className="transition-all duration-500 flex items-center justify-between flex-wrap bg-white py-2 px-4 fixed w-full z-10 top-0">
+                <nav style={{borderBottom: '1px solid #c1c0c04a'}} id='navBarHeader' className="transition-all duration-500 flex items-center justify-between flex-wrap bg-white py-2 px-4 fixed w-full z-10 top-0">
                     <div className="flex items-center flex-shrink-0 text-white mr-4">
                         <NavLink to='/' aria-label="Back to homepage" className="flex items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 32 32" className="w-10 h-10 sm:w-12 sm:h-12 lg:w-16 lg:h-16  text-orange-500">
@@ -165,11 +162,11 @@ export default () => {
                             </li>
                             <li className="mr-3">
                                 <NavLink className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                                    to=''>Tin tức</NavLink>
+                                    to='news'>Tin tức</NavLink>
                             </li>
                             <li className="mr-3">
                                 <NavLink className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                                    to=''>Ứng dụng</NavLink>
+                                    to='aboutapp'>Ứng dụng</NavLink>
                             </li>
                         </ul>
                         <div className='flex text-gray-500'>
