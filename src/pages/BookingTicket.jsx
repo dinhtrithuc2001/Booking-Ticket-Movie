@@ -15,7 +15,7 @@ import { Tabs } from 'antd';
 import { callApiThongTinNguoiDung, setUserInfor } from '../redux/reducers/UserReducer'
 import moment from 'moment'
 import { LayThongTinTaiKhoan } from '../services/UserService'
-import { connection } from '..'
+
 
 
 const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
@@ -42,16 +42,11 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
             if (thongTinNguoiDung.taiKhoan == itemGhe.taiKhoanNguoiDat) {
                 classGheDaDuocTaiKhoanDat = 'gheDaDuocTaiKhoanNayDat'
             }
-            // kiểm tra từng ghế xem có phải người khác đang đặt hay không
-            let classGheKhachDat = ''
-            let indexGheKD = danhSachGheKhachDat.findIndex(gheKD => gheKD.maGhe == itemGhe.maGhe)
-            if(indexGheKD !== -1){
-                classGheKhachDat = 'gheKhachDat'
-            }
+          
 
             return <Fragment key={index}>
-                <button disabled={daDat | classGheKhachDat !== ''} onClick={() => dispatch(datGhe(itemGhe))}
-                    className={`ghe ${classGheVip} ${classGheDaDat} ${classGheDangDat} ${classGheDaDuocTaiKhoanDat} ${classGheKhachDat}`}>
+                <button disabled={daDat} onClick={() => dispatch(datGhe(itemGhe))}
+                    className={`ghe ${classGheVip} ${classGheDaDat} ${classGheDangDat} ${classGheDaDuocTaiKhoanDat}`}>
                     {itemGhe.daDat ? classGheDaDuocTaiKhoanDat == '' ? <FontAwesomeIcon icon={faXmark} /> : <FontAwesomeIcon icon={faUserTag} /> : itemGhe.stt}
                 </button>
                 {(index + 1) % 16 == 0 ? <br /> : ''}
@@ -87,13 +82,6 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
         }
     }
 
-    useEffect(()=>{
-
-        // load danh sách ghế đang đặt từ server về
-        connection.on("loadDanhSachGheDaDat", (dsGheKhachDat) => {
-            console.log('danhSachGheKhachDat', dsGheKhachDat)
-        })
-    },[])
 
     return (
         <div className='container min-h-[100vh]'>
@@ -115,7 +103,6 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
                                     <th>Ghế vip</th>
                                     <th>Ghế đang chọn</th>
                                     <th>Ghế được tài khoản này đặt</th>
-                                    <th>Ghế người khác đang đặt</th>
                                 </tr>
                             </thead>
                             <tbody className='bg-white divide-y divide-gray-200'>
@@ -129,7 +116,6 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
                                             <FontAwesomeIcon icon={faUserTag} />
                                         </button>
                                     </td>
-                                    <td><button className='ghe gheNguoiKhacDangDat'></button></td>
                                 </tr>
                             </tbody>
                         </table>
