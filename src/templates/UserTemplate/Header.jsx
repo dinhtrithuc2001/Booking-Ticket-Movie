@@ -1,37 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleUser, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { Drawer, Space, Tooltip } from 'antd';
 import { getLocalStorage, removeLocalStorage, SwalConfig } from '../../utils/config'
 import { useDispatch, useSelector } from 'react-redux'
-import { UserLogin } from '../../redux/reducers/UserReducer'
-import { LayThongTinTaiKhoan } from '../../services/UserService'
+import { setStatusLogin } from '../../redux/reducers/UserReducer'
 import { LOCALSTORAGE_USER } from '../../utils/constant'
+import { LayThongTinTaiKhoan } from '../../services/UserService'
 
 export default () => {
 
-    const userData = getLocalStorage(LOCALSTORAGE_USER)
     const isLogin = useSelector(state => state.UserReducer.isLogin)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false);
-    
+  
     useEffect(() => {
-       
-        const callApiThongTinTaiKhoan = async () => {
-            try {
-                await LayThongTinTaiKhoan()
-                // load lại trang mà vẫn giữ trạng thái login thì gửi lên store redux trạng thái login true
-                dispatch(UserLogin(true))
-            } catch (error) {
-                // trường hợp AccessToken bị sai
-                removeLocalStorage(LOCALSTORAGE_USER)
-            }
+        
+        if(getLocalStorage(LOCALSTORAGE_USER)){
+            dispatch(setStatusLogin(true))
         }
-        callApiThongTinTaiKhoan()
 
         document.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -74,10 +65,10 @@ export default () => {
                         <NavLink to='/inforUser' className="flex flex-col items-center justify-center">
                             <div className="relative">
                                 <span className="absolute bottom-0 right-0 w-4 h-4 bg-green-600 border rounded-full border-gray-50" />
-                                <img src={`https://i.pravatar.cc/150?u=${userData.taiKhoan}`} className="w-10 h-10 border rounded-full" />
+                                <img src={`https://i.pravatar.cc/150?u=${getLocalStorage(LOCALSTORAGE_USER).taiKhoan}`} className="w-10 h-10 border rounded-full" />
                             </div>
                             <div>
-                                <h5 className='m-0 pl-2 text-center'>{userData.taiKhoan}</h5>
+                                <h5 className='m-0 pl-2 text-center'>{getLocalStorage(LOCALSTORAGE_USER).taiKhoan}</h5>
                             </div>
                         </NavLink>
                         <Tooltip placement="bottom" title={text}>
@@ -94,7 +85,7 @@ export default () => {
                                     if (result.isConfirmed) {
                                         SwalConfig('Đã đăng xuất', 'success', false)
                                         removeLocalStorage(LOCALSTORAGE_USER)
-                                        dispatch(UserLogin(false))
+                                        dispatch(setStatusLogin(false))
                                         navigate('/')
                                     }
                                 })
@@ -116,11 +107,7 @@ export default () => {
                 <hr />
                 <ul className="list-reset justify-center flex-1 items-center mt-2">
                     <li className="mr-3">
-                        <NavLink to='/' className="block py-2 px-4 text-black font-medium text-base hover:text-red-600 no-underline" >Lịch chiếu</NavLink>
-                    </li>
-                    <li className="mr-3">
-                        <NavLink className="block no-underline text-black font-medium text-base hover:text-red-600 hover:text-underline py-2 px-4"
-                            to='/'>Cụm rạp</NavLink>
+                        <NavLink to='/' className="block py-2 px-4 text-black font-medium text-base hover:text-red-600 no-underline" >Danh sách phim</NavLink>
                     </li>
                     <li className="mr-3">
                         <NavLink className="block no-underline text-black font-medium text-base hover:text-red-600 hover:text-underline py-2 px-4"
@@ -154,7 +141,7 @@ export default () => {
                         id="nav-content">
                         <ul className="list-reset lg:flex justify-center flex-1 items-center mb-0">
                             <li className="mr-3">
-                                <Link to='/#movie-list' className="inline-block py-2 px-4 text-black font-medium md:text-base hover:text-red-600 no-underline" >Lịch chiếu</Link>
+                                <Link to='/#movie-list' className="inline-block py-2 px-4 text-black font-medium md:text-base hover:text-red-600 no-underline" >Phim</Link>
                             </li>
                             <li className="mr-3">
                                 <Link className="inline-block no-underline text-black font-medium md:text-base hover:text-red-600 hover:text-underline py-2 px-4"
@@ -174,10 +161,10 @@ export default () => {
                                 <NavLink to='/inforUser' className="flex flex-row items-center justify-center border-r-2 border-gray-300 pr-2">
                                     <div className="relative">
                                         <span className="absolute bottom-0 right-0 w-4 h-4 bg-green-600 border rounded-full border-gray-50" />
-                                        <img src={`https://i.pravatar.cc/150?u=${userData.taiKhoan}`} className="w-10 h-10 border rounded-full" />
+                                        <img src={`https://i.pravatar.cc/150?u=${getLocalStorage(LOCALSTORAGE_USER).taiKhoan}`} className="w-10 h-10 border rounded-full" />
                                     </div>
                                     <div>
-                                        <h5 className='m-0 pl-2 text-center'>{userData.taiKhoan}</h5>
+                                        <h5 className='m-0 pl-2 text-center'>{getLocalStorage(LOCALSTORAGE_USER).taiKhoan}</h5>
                                     </div>
                                 </NavLink>
                                 <Tooltip placement="bottomRight" title={text}>
@@ -194,7 +181,7 @@ export default () => {
                                             if (result.isConfirmed) {
                                                 SwalConfig('Đã đăng xuất', 'success', false)
                                                 removeLocalStorage(LOCALSTORAGE_USER)
-                                                dispatch(UserLogin(false))
+                                                dispatch(setStatusLogin(false))
                                                 navigate('/')
                                             }
                                         })

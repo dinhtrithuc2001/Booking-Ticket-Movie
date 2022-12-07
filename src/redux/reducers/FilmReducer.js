@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { LayDanhSachPhim, LayThongTinLichChieu, LayThongTinPhimChiTiet } from '../../services/FilmService';
-import {history} from '../../utils/history'
+import { LayThongTinLichChieu } from '../../services/CinemaService';
 
 const initialState = {
     arrFilm: [],

@@ -28,7 +28,7 @@ export default function MovieList(props) {
         <div id='movie-list' className="movie-list container mx-auto md:px-8 lg:px-10">
 
             {/* Laptop */}
-            <BookingTicketNow />
+            <BookingTicketNow arrFilm={arrFilm}/>
             <Tabs className='hidden md:block' defaultActiveKey="1" items={[
                 { label: 'Phim đang chiếu', key: '1', children: <MultipleRowSlick status={false} arrFilm={arrFilm} /> },
                 { label: 'Phim sắp chiếu', key: '2', children: <MultipleRowSlick status={true} arrFilm={arrFilm} /> },

@@ -10,8 +10,11 @@ import Detail from './pages/Detail';
 import NotFound from './pages/NotFound';
 import AboutApp from './pages/AboutApp';
 import News from './pages/News';
+import BookingTicket from './pages/BookingTicket';
+import LoadingPage from './pages/LoadingPage';
 
 function App() {
+
     return (
         <HistoryRouter history={history}>
             <Routes>
@@ -25,8 +28,9 @@ function App() {
                     <Route path='register' element={<Register />} />
                     <Route path='aboutapp' element={<AboutApp />} />
                     <Route path='news' element={<News />} />
+                    <Route path='booking/:id' element={<BookingTicket />} />
                 </Route>
-                <Route path='/admin' element={<AdminTemplate />}></Route>    
+                <Route path='/admin' element={<AdminTemplate />}></Route>
             </Routes>
         </HistoryRouter>
     );

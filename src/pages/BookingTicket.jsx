@@ -1,0 +1,255 @@
+import React, { Fragment, useEffect, useState } from 'react'
+import { LOCALSTORAGE_USER } from '../utils/constant'
+import { getLocalStorage, SwalConfig } from '../utils/config'
+import useRoute from '../hooks/useRoute'
+import LoadingPage from './LoadingPage'
+import { LayDanhSachPhongVeService } from '../services/BookingManager'
+import { useDispatch, useSelector } from 'react-redux'
+import { datGhe, layDanhSachPhongVe, xoaDanhSachGheDangDat } from '../redux/reducers/BookingReducer'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark, faUserTag } from '@fortawesome/free-solid-svg-icons'
+import _ from "lodash";
+import { DatVe } from '../services/BookingManager'
+import { ThongTinDatVe } from '../_core/models/ThongTinDatVe'
+import { Tabs } from 'antd';
+import { callApiThongTinNguoiDung, setUserInfor } from '../redux/reducers/UserReducer'
+import moment from 'moment'
+import { LayThongTinTaiKhoan } from '../services/UserService'
+import { connection } from '..'
+
+
+const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
+
+    const dispatch = useDispatch()
+    const { danhSachGhe, thongTinPhim } = useSelector(state => state.BookingReducer.chiTietPhongVe)
+    const { danhSachGheDangDat } = useSelector(state => state.BookingReducer)
+    const { danhSachGheKhachDat } = useSelector(state => state.BookingReducer)
+    const renderSeats = () => {
+        return danhSachGhe.map((itemGhe, index) => {
+
+            let classGheVip = itemGhe.loaiGhe == 'Vip' ? 'gheVip' : ''
+            let classGheDaDat = itemGhe.daDat == true ? 'gheDaDat' : ''
+            let classGheDangDat = ''
+            let daDat = itemGhe.daDat ? true : false
+
+            // kiểm tra ghế trong danh sách có trùng với ghế trong danh sách ghế đang đặt ko? -> set css cho ghế đang đặt
+            const indexGheDangDat = danhSachGheDangDat.findIndex(itemGheDangDat => itemGheDangDat.maGhe == itemGhe.maGhe)
+            if (indexGheDangDat !== -1) {
+                classGheDangDat = 'gheDangDat'
+            }
+            // kiểm tra taiKhoan của account này có trùng với taiKhoan của ghế nào ko ? -> set css cho ghế dc account này đặt
+            let classGheDaDuocTaiKhoanDat = ''
+            if (thongTinNguoiDung.taiKhoan == itemGhe.taiKhoanNguoiDat) {
+                classGheDaDuocTaiKhoanDat = 'gheDaDuocTaiKhoanNayDat'
+            }
+            // kiểm tra từng ghế xem có phải người khác đang đặt hay không
+            let classGheKhachDat = ''
+            let indexGheKD = danhSachGheKhachDat.findIndex(gheKD => gheKD.maGhe == itemGhe.maGhe)
+            if(indexGheKD !== -1){
+                classGheKhachDat = 'gheKhachDat'
+            }
+
+            return <Fragment key={index}>
+                <button disabled={daDat | classGheKhachDat !== ''} onClick={() => dispatch(datGhe(itemGhe))}
+                    className={`ghe ${classGheVip} ${classGheDaDat} ${classGheDangDat} ${classGheDaDuocTaiKhoanDat} ${classGheKhachDat}`}>
+                    {itemGhe.daDat ? classGheDaDuocTaiKhoanDat == '' ? <FontAwesomeIcon icon={faXmark} /> : <FontAwesomeIcon icon={faUserTag} /> : itemGhe.stt}
+                </button>
+                {(index + 1) % 16 == 0 ? <br /> : ''}
+            </Fragment>
+        })
+    }
+
+    const callApiDatVe = async () => {
+        try {
+            // tạo 1 thongTinDatVe thông qua đối tượng tạo sẵn (gồm maLichChieu và danhSachGhe), do backEnd yêu cầu phải gửi như thế
+            // bên cạnh đó, khi gửi nếu ghế ko có dữ liệu thì vẫn có thông tin, ko bị lỗi ko đáng có
+            const thongTinDatVe = new ThongTinDatVe()
+            thongTinDatVe.maLichChieu = id
+            thongTinDatVe.danhSachVe = danhSachGheDangDat
+            // trong lúc pending thì gọi loading page
+            setIsLoading(true)
+            // gọi tới service DatVe với tham số là thongTinDatVe
+            await DatVe(thongTinDatVe)
+            // hiển thị alert thông báo thành công
+            SwalConfig('Đặt vé thành công', 'success')
+            // xóa các ghế trong danh sách ghế đang đặt
+            dispatch(xoaDanhSachGheDangDat())
+            // đặt vé thành công thì gọi api để load lại phòng vé 
+            const result = await LayDanhSachPhongVeService(id)
+            dispatch(layDanhSachPhongVe(result.data.content))
+            // load lại lịch sử ghế đã đặt của account này luôn, vì lịch sử đặt dc trả về từ ThongTinTaiKhoan
+            const apiNguoiDung = await LayThongTinTaiKhoan()
+            dispatch(setUserInfor(apiNguoiDung.data.content))
+            // khi xong hết thì dừng trạng thái loading page
+            setIsLoading(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+
+        // load danh sách ghế đang đặt từ server về
+        connection.on("loadDanhSachGheDaDat", (dsGheKhachDat) => {
+            console.log('danhSachGheKhachDat', dsGheKhachDat)
+        })
+    },[])
+
+    return (
+        <div className='container min-h-[100vh]'>
+            <div className="grid grid-cols-12 z-[1] pb-2">
+                <div className="col-span-9">
+                    <div className='flex justify-center relative mb-2'>
+                        <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[2] uppercase font-bold tracking-wider text-white'>Screen</div>
+                        <div className='trapezoid'></div>
+                    </div>
+                    <div className='text-center'>
+                        {renderSeats()}
+                    </div>
+                    <div className='mt-5 flex justify-center'>
+                        <table className='divide-y divide-gray-200 w-2/3'>
+                            <thead className='bg-gray-50 p-5'>
+                                <tr>
+                                    <th>Ghế đã đặt</th>
+                                    <th>Ghế thường</th>
+                                    <th>Ghế vip</th>
+                                    <th>Ghế đang chọn</th>
+                                    <th>Ghế được tài khoản này đặt</th>
+                                    <th>Ghế người khác đang đặt</th>
+                                </tr>
+                            </thead>
+                            <tbody className='bg-white divide-y divide-gray-200'>
+                                <tr className='text-center'>
+                                    <td><button className='ghe gheDaDat'><FontAwesomeIcon icon={faXmark} /></button></td>
+                                    <td><button className='ghe'></button></td>
+                                    <td><button className='ghe gheVip'></button></td>
+                                    <td><button className='ghe gheDangDat'></button></td>
+                                    <td>
+                                        <button className='ghe gheDaDuocTaiKhoanNayDat'>
+                                            <FontAwesomeIcon icon={faUserTag} />
+                                        </button>
+                                    </td>
+                                    <td><button className='ghe gheNguoiKhacDangDat'></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="col-span-3">
+                    <h3 className='text-orange-500 text-center text-2xl'>
+                        {danhSachGheDangDat.reduce((tong, ghe) => {
+                            return tong += ghe.giaVe
+                        }, 0).toLocaleString()} VND
+                    </h3>
+                    <hr />
+                    <div className='my-5'>
+                        <h3 className='text-lg mb-2 tracking-wide font-semibold'>{thongTinPhim.tenPhim}</h3>
+                        <p className='mb-2'>{thongTinPhim.tenCumRap} - {thongTinPhim.tenRap}</p>
+                        <p className='mb-2'>Địa điểm: {thongTinPhim.diaChi}</p>
+                        <p>Ngày chiếu: {thongTinPhim.ngayChieu} - {thongTinPhim.gioChieu}</p>
+                    </div>
+                    <hr />
+                    <div className="flex flex-row my-5 items-center">
+                        <div className='flex flex-wrap items-center '>
+                            <span className='text-black font-semibold text-lg'>Ghế: </span>
+                            {_.sortBy(danhSachGheDangDat, ['stt'])?.map((itemGheDangChon, indexGheDangChon) =>
+                                <span key={indexGheDangChon} className='mb-2 text-orange-600 font-semibold text-lg mx-1 border-2 px-2 border-orange-100'>{itemGheDangChon.stt}</span>)}
+                        </div>
+                    </div>
+                    <hr />
+                    <div className='my-5'>
+                        <h2>Email</h2>
+                        {thongTinNguoiDung.email}
+                    </div>
+                    <hr />
+                    <div className='my-5'>
+                        <h2>Phone</h2>
+                        {thongTinNguoiDung.soDT}
+                    </div>
+                    <hr />
+                    <div className='mb-0 cursor-pointer'>
+                        <div onClick={() => {
+                            if (danhSachGheDangDat == '') {
+                                return SwalConfig('Vui lòng chọn ghế', 'warning', true)
+                            }
+                            else {
+                                callApiDatVe()
+                            }
+                        }} className='bg-orange-400 hover:bg-orange-600 text-white w-full text-center py-3 font-bold text-xl'>
+                            ĐẶT VÉ
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const KetQuaDatVe = (thongTinNguoiDung) => {
+    const renderTicketItem = () => {
+        return thongTinNguoiDung.thongTinDatVe?.map((item, index) => {
+            return <div key={index} className="p-2 lg:w-1/3 md:w-1/2 w-full">
+                <div className="h-full flex items-center border-gray-200 border p-4 rounded-lg">
+                    <img alt="team" className="w-16 h-16 bg-gray-100 object-cover object-center flex-shrink-0 rounded-full mr-4" src={item.hinhAnh} />
+                    <div className="flex-grow">
+                        <h2 className="text-gray-900 title-font font-medium">{item.tenPhim}</h2>
+                        <h2 className="text-gray-700 title-font font-medium">{_.first(item.danhSachGhe).tenHeThongRap} - {_.first(item.danhSachGhe).tenCumRap}</h2>
+                        <p className="text-gray-500">Ngày giờ chiếu: {moment(item.ngayDat).format('DD-MM-YYYY ~ hh:MM:A')}</p>
+                        <p className="text-gray-500">Thời lượng: {item.thoiLuongPhim} phút</p>
+                        <p>Ghế: {item.danhSachGhe.map((ghe, iGhe) => {
+                            return <button key={iGhe} className='mb-2 text-orange-600 font-semibold text-lg mx-1 px-1 border-orange-100'>{ghe.tenGhe}</button>
+                        })}</p>
+                    </div>
+                </div>
+            </div>
+        })
+    }
+    return <div>
+        <section className="text-gray-600 body-font">
+            <div className="container px-5 py-10 mx-auto">
+                <div className="flex flex-col text-center w-full mb-10">
+                    <h1 className="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900 uppercase">lịch sử đặt vé khách hàng</h1>
+                </div>
+                <div className="flex flex-wrap -m-2">
+                    {renderTicketItem()}
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+}
+
+export default () => {
+    const { thongTinNguoiDung, tabActive } = useSelector(state => state.UserReducer)
+    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(true)
+    const { param, navigate } = useRoute()
+
+    useEffect(() => {
+        dispatch(callApiThongTinNguoiDung)
+        if (!getLocalStorage(LOCALSTORAGE_USER)) {
+            navigate('/login')
+        }
+        else {
+            const callApiPhongVe = async () => {
+                const result = await LayDanhSachPhongVeService(param.id)
+                dispatch(layDanhSachPhongVe(result.data.content))
+                setIsLoading(false)
+            }
+            callApiPhongVe()
+        }
+        return () => {
+            dispatch(xoaDanhSachGheDangDat())
+        }
+    }, [])
+
+    const items = [
+        { label: '01. CHỌN GHẾ & ĐẶT VÉ', key: 1, children: BookingTicket(thongTinNguoiDung, param.id, setIsLoading) },
+        { label: '02. KẾT QUẢ ĐẶT VÉ', key: 2, children: KetQuaDatVe(thongTinNguoiDung) },
+    ];
+    return <>
+        {isLoading ? <LoadingPage /> : <Tabs className='mt-[6rem]  pb-2 min-h-[100vh] booking' items={items} />}
+    </>;
+}
+

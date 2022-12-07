@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import { Tabs } from 'antd';
 import moment from 'moment';
 import { useLocation } from 'react-router-dom';
+import useRoute from '../../hooks/useRoute';
 
 export default function MenuCinema(props) {
     const location = useLocation()
+    const {navigate} = useRoute()
 
     useEffect(() => {
         if (location.hash) {
@@ -22,10 +24,6 @@ export default function MenuCinema(props) {
     const renderDanhSachPhim = (itemRap) => {
         let danhSachPhim = [];
         itemRap.danhSachPhim.forEach((itemPhim, iPhim) => {
-            let ngayChieu = []
-            itemPhim.lstLichChieuTheoPhim.forEach((itemLichChieu, i) => {
-                ngayChieu.push(itemLichChieu.ngayChieuGioChieu)
-            })
             danhSachPhim.push({
                 label: <div className='flex border-b pb-4'>
                     <div className='mr-4'>
@@ -34,13 +32,13 @@ export default function MenuCinema(props) {
                     <div>
                         <h2 className='font-bold text-left mb-2 text-sm uppercase'><span className='bg-red-600 p-1 rounded-md text-white text-sm'>{itemPhim.hot == true ? "C18" : "C16"}</span> {itemPhim.tenPhim}</h2>
                         <div className='grid grid-cols-2 gap-1'>
-                            {ngayChieu?.slice(0, 4).map((itemNgayChieu, indexNgayChieu) =>
-                                <button onClick={() => alert(itemPhim.tenPhim)} key={indexNgayChieu} className="bg-gray-100 hover:bg-gray-300 border-2 text-white font-bold py-2 px-4 rounded">
+                            {itemPhim.lstLichChieuTheoPhim?.slice(0, 4).map((itemLichChieu, indexNgayChieu) =>
+                                <button onClick={() => navigate(`booking/${itemLichChieu.maLichChieu}`)} key={indexNgayChieu} className="bg-gray-100 hover:bg-gray-300 border-2 text-white font-bold py-2 px-4 rounded">
                                     <span className='text-green-500'>
-                                        {moment(itemNgayChieu).format("DD-MM-YYYY ~ ")}
+                                        {moment(itemLichChieu.ngayChieuGioChieu).format("DD-MM-YYYY ~ ")}
                                     </span>
                                     <span className='text-orange-500'>
-                                        {moment(itemNgayChieu).format("hh:mm A")}
+                                        {moment(itemLichChieu.ngayChieuGioChieu).format("hh:mm A")}
                                     </span>
                                 </button>
                             )}

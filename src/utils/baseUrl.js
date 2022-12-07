@@ -1,16 +1,16 @@
 import axios from "axios";
-import { DOMAIN_BE, TOKEN } from "./constant";
+import { DOMAIN_BE, LOCALSTORAGE_USER, TOKEN } from "./constant";
 import { getLocalStorage } from "./config";
 
 export const http = axios.create({  
     baseURL: DOMAIN_BE,
-    timeout: 6000
+    timeout: 10000
 })
 
 
 http.interceptors.request.use(config => {
 
-    const token = getLocalStorage('USER')
+    const token = getLocalStorage(LOCALSTORAGE_USER)
 
     return {
         ...config,

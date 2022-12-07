@@ -8,7 +8,7 @@ import {  getFilmList } from '../redux/reducers/FilmReducer'
 import { LayHeThongRapChieu } from '../redux/reducers/CinemaReducer'
 import { history } from '../utils/history'
 import { LayDanhSachPhim } from '../services/FilmService'
-import { LayThongTinLichChieuHeThongRap } from '../services/CinemaServiec'
+import { LayThongTinLichChieuHeThongRap } from '../services/CinemaService'
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true)
@@ -25,7 +25,6 @@ export default function Home() {
             try {
                 const apiFilmList = await LayDanhSachPhim()
                 dispatch(getFilmList(apiFilmList.data.content))
-                setIsLoading(false)
             } catch (error) {
                console.log(error)
             }
@@ -35,6 +34,7 @@ export default function Home() {
             try {
                 const apiHeThongRap = await LayThongTinLichChieuHeThongRap()
                 dispatch(LayHeThongRapChieu(apiHeThongRap.data.content))
+                setIsLoading(false)
             } catch (error) {
                 console.log(error)
             }

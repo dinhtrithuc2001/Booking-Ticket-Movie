@@ -1,16 +1,17 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import moment from 'moment';
+import useRoute from '../../hooks/useRoute';
 
 export default function ShowtimeDetail(props) {
 
     const { heThongRapChieu } = props
-
+    const {navigate} = useRoute()
     const renderDanhSachLichChieu = (itemRap) => {
         let danhSachLichChieu = [];
         itemRap.lichChieuPhim.map((itemLichChieu, iLichChieu) => {
             danhSachLichChieu.push({
-                label: <button onClick={() => alert(itemLichChieu.maLichChieu)} className="bg-gray-100 mt-[-1rem] hover:bg-gray-300 border-2 text-white font-bold py-2 px-4 rounded inline-block">
+                label: <button onClick={()=> navigate(`/booking/${itemLichChieu.maLichChieu}`)}  className="bg-gray-100 mt-[-1rem] hover:bg-gray-300 border-2 text-white font-bold py-2 px-4 rounded inline-block">
                     <span className='text-green-500'>
                         {moment(itemLichChieu.ngayChieuGioChieu).format("DD-MM-YYYY ~ ")}
                     </span>
@@ -69,7 +70,7 @@ export default function ShowtimeDetail(props) {
                     <h2 className='text-white bg-orange-400 my-2'>{itemCumRap.tenCumRap}</h2>
                     <div className='grid grid-cols-1 sm:grid-cols-2 gap-2'>
                         {itemCumRap.lichChieuPhim?.map((itemLich, iLich) =>
-                            <button key={iLich} onClick={() => alert(itemLich.maLichChieu)} className="bg-gray-100 hover:bg-gray-300 border-2 text-white font-bold py-1 rounded">
+                            <button key={iLich} onClick={() => navigate(`/booking/${itemLich.maLichChieu}`)} className="bg-gray-100 hover:bg-gray-300 border-2 text-white font-bold py-1 rounded">
                             <span className='text-green-500'>
                                 {moment(itemLich.ngayChieuGioChieu).format("DD-MM-YYYY ~ ")}
                             </span>
