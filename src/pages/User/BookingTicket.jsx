@@ -1,20 +1,19 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { LOCALSTORAGE_USER } from '../utils/constant'
-import { getLocalStorage, SwalConfig } from '../utils/config'
-import useRoute from '../hooks/useRoute'
-import LoadingPage from './LoadingPage'
-import { LayDanhSachPhongVeService } from '../services/BookingManager'
 import { useDispatch, useSelector } from 'react-redux'
-import { datGhe, layDanhSachPhongVe, xoaDanhSachGheDangDat } from '../redux/reducers/BookingReducer'
+import { Tabs } from 'antd'
+import moment from 'moment'
+import _ from "lodash";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark, faUserTag } from '@fortawesome/free-solid-svg-icons'
-import _ from "lodash";
-import { DatVe } from '../services/BookingManager'
-import { ThongTinDatVe } from '../_core/models/ThongTinDatVe'
-import { Tabs } from 'antd';
-import { callApiThongTinNguoiDung, setUserInfor } from '../redux/reducers/UserReducer'
-import moment from 'moment'
-import { LayThongTinTaiKhoan } from '../services/UserService'
+import useRoute from '../../hooks/useRoute'
+import { LOCALSTORAGE_USER } from '../../utils/constant'
+import { getLocalStorage, SwalConfig } from '../../utils/config'
+import LoadingPage from '../LoadingPage'
+import { LayDanhSachPhongVeService, DatVe } from '../../services/BookingManager'
+import { datGhe, layDanhSachPhongVe, xoaDanhSachGheDangDat } from '../../redux/reducers/BookingReducer'
+import { ThongTinDatVe } from '../../_core/models/ThongTinDatVe'
+import { callApiThongTinNguoiDung, setUserInfor } from '../../redux/reducers/UserReducer'
+import { LayThongTinTaiKhoan } from '../../services/UserService'
 
 
 
@@ -23,7 +22,6 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
     const dispatch = useDispatch()
     const { danhSachGhe, thongTinPhim } = useSelector(state => state.BookingReducer.chiTietPhongVe)
     const { danhSachGheDangDat } = useSelector(state => state.BookingReducer)
-    const { danhSachGheKhachDat } = useSelector(state => state.BookingReducer)
     const renderSeats = () => {
         return danhSachGhe.map((itemGhe, index) => {
 
@@ -42,7 +40,7 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
             if (thongTinNguoiDung.taiKhoan == itemGhe.taiKhoanNguoiDat) {
                 classGheDaDuocTaiKhoanDat = 'gheDaDuocTaiKhoanNayDat'
             }
-          
+
 
             return <Fragment key={index}>
                 <button disabled={daDat} onClick={() => dispatch(datGhe(itemGhe))}
@@ -201,8 +199,6 @@ const KetQuaDatVe = (thongTinNguoiDung) => {
                 </div>
             </div>
         </section>
-
-
     </div>
 }
 
@@ -213,11 +209,11 @@ export default () => {
     const { param, navigate } = useRoute()
 
     useEffect(() => {
-        dispatch(callApiThongTinNguoiDung)
         if (!getLocalStorage(LOCALSTORAGE_USER)) {
             navigate('/login')
         }
         else {
+            dispatch(callApiThongTinNguoiDung)
             const callApiPhongVe = async () => {
                 const result = await LayDanhSachPhongVeService(param.id)
                 dispatch(layDanhSachPhongVe(result.data.content))

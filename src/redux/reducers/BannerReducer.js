@@ -7,17 +7,17 @@ const initialState = {
     data: [
         {
             maBanner: 1,
-            link: 'https://www.youtube.com/embed/rcpuVDA9JPY',
+            link: 'https://www.youtube.com/watch?v=rcpuVDA9JPY',
             img: avatar
         },
         {
             maBanner: 2,
-            link: 'https://www.youtube.com/embed/7Ma1uab-bQM',
+            link: 'https://www.youtube.com/watch?v=7Ma1uab-bQM&t=4s',
             img: onepiece
         },
         {
             maBanner: 3,
-            link: 'https://www.youtube.com/embed/fovTZDDPgAQ',
+            link: 'https://www.youtube.com/watch?v=fovTZDDPgAQ',
             img: pussInBoots
         },
     ],
@@ -28,11 +28,12 @@ const BannerReducer = createSlice({
     name: "BannerReducer",
     initialState,
     reducers: {
-        getBannerMovie: (state , {type, payload}) => {
-            return {...state}
+        getBannerMovie: (state, { type, payload }) => {
+            return { ...state }
         },
-        getModalVideo: (state, {type, payload}) => {
-            return {...state,modalData: payload }
+        getModalVideo: (state, { type, payload }) => {
+            const videoId = getId(payload)
+            return { ...state, modalData: videoId }
         }
     }
 });
@@ -40,3 +41,12 @@ const BannerReducer = createSlice({
 export const { getBannerMovie, getModalVideo } = BannerReducer.actions
 
 export default BannerReducer.reducer
+
+function getId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+
+    return (match && match[2].length === 11)
+        ? match[2]
+        : null;
+}

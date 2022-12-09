@@ -39,7 +39,7 @@ export default function HomeCarousel() {
                             closable={false}
                             open={isModalOpen}
                             onCancel={handleCancel}>
-                            <iframe id='videoId' className="w-full h-full rounded-xl" src={dataVideoModal} allowFullScreen></iframe>
+                            <iframe id='videoId' className="w-full h-full rounded-xl" src={`https://www.youtube.com/embed/${dataVideoModal}`} allowFullScreen></iframe>
                         </Modal> : ''}
                     </div>
                 })}

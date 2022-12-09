@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import useRoute from '../hooks/useRoute'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
-import { kiemTraRong, kiemTraDinhDang, kiemTraDoDai } from '../utils/validation';
-import { getLocalStorage, setLocalStorage, SwalConfig } from '../utils/config';
+import useRoute from '../../hooks/useRoute'
+import { kiemTraRong, kiemTraDinhDang, kiemTraDoDai } from '../../utils/validation';
+import { getLocalStorage, setLocalStorage, SwalConfig } from '../../utils/config';
 import { useDispatch } from 'react-redux';
-import { setStatusLogin } from '../redux/reducers/UserReducer';
-import { history } from '../utils/history'
-import { DangNhap } from '../services/UserService';
-import { LOCALSTORAGE_USER } from '../utils/constant';
-import NotFound from './NotFound';
+import { setStatusLogin } from '../../redux/reducers/UserReducer';
+import { history } from '../../utils/history'
+import { DangNhap } from '../../services/UserService';
+import { LOCALSTORAGE_USER } from '../../utils/constant';
+import NotFound from '../NotFound';
 
 
 export default function Login() {

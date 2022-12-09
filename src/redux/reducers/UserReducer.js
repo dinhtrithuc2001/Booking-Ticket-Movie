@@ -18,6 +18,7 @@ const UserReducer = createSlice({
         setUserInfor: (state, {type, payload}) => {
             state.thongTinNguoiDung = payload
         },
+      
     }
 });
 

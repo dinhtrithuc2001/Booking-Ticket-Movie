@@ -23,7 +23,7 @@ export default function MultipleRowSlick(props) {
 
     function SamplePrevArrow(props) {
         const { className, style, onClick } = props;
-        return (
+        return (    
             <div
                 className={className}
                 style={{ ...style, background: "transparent" }}

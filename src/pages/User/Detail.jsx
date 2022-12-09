@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import useRoute from '../hooks/useRoute'
-import { Progress, Modal } from 'antd';
 import { useDispatch, useSelector } from 'react-redux'
-import {  callApiLichChieuTheoPhim, getfilmDetail } from '../redux/reducers/FilmReducer'
-import LoadingPage from './LoadingPage'
+import { Progress, Modal } from 'antd';
 import moment from 'moment';
-import { history } from '../utils/history';
-import { getModalVideo } from '../redux/reducers/BannerReducer';
-import { LayThongTinPhimChiTiet } from '../services/FilmService';
-import ShowtimeDetail from '../components/Detail/ShowtimeDetail';
+import useRoute from '../../hooks/useRoute'
+import { callApiLichChieuTheoPhim, getfilmDetail } from '../../redux/reducers/FilmReducer'
+import LoadingPage from '../LoadingPage'
+import { history } from '../../utils/history';
+import { getModalVideo } from '../../redux/reducers/BannerReducer';
+import { LayThongTinPhimChiTiet } from '../../services/FilmService';
+import ShowtimeDetail from '../../components/Detail/ShowtimeDetail';
 
 export default function Detail() {
     const [isLoadingDetail, setIsLoadingDetail] = useState(true)
@@ -19,13 +19,13 @@ export default function Detail() {
     let dataVideoModal = useSelector(state => state.BannerReducer.modalData)
 
     const dispatch = useDispatch()
-    
-   
+
+
     useEffect(() => {
         history.listen(() => {
             window.scrollTo(0, 0);
         });
-        const callApiChiTiet = async(id) => {
+        const callApiChiTiet = async (id) => {
             try {
                 const apiChiTiet = await LayThongTinPhimChiTiet(id)
                 dispatch(getfilmDetail(apiChiTiet.data.content))
@@ -75,7 +75,7 @@ export default function Detail() {
                                         closable={false}
                                         open={isModalOpen}
                                         onCancel={handleCancel}>
-                                        <iframe id='videoId' className="w-full h-full rounded-xl" src={dataVideoModal} allowFullScreen></iframe>
+                                        <iframe id='videoId' width='100%' height='100%' src={`https://www.youtube.com/embed/${dataVideoModal}`} title="YouTube video player" frameBorder={0} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
                                     </Modal> : ''}
                                     <a href='#showtime' className="bg-transparent tracking-widest text-[16px] hover:bg-orange-400 text-white font-semibold hover:text-white border-orange-500 border-[3px] hover:border-transparent rounded uppercase px-[5rem] py-[0.7rem] mt-4 ml-4">
                                         Đặt vé

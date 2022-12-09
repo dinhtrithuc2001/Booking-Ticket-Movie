@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import MovieList from '../components/Home/MovieList'
-import HomeCarousel from '../components/Home/HomeCarousel'
-import MenuCinema from '../components/Home/MenuCinema'
-import LoadingPage from './LoadingPage'
 import { useDispatch, useSelector } from 'react-redux'
-import {  getFilmList } from '../redux/reducers/FilmReducer'
-import { LayHeThongRapChieu } from '../redux/reducers/CinemaReducer'
-import { history } from '../utils/history'
-import { LayDanhSachPhim } from '../services/FilmService'
-import { LayThongTinLichChieuHeThongRap } from '../services/CinemaService'
+import MovieList from '../../components/Home/MovieList'
+import HomeCarousel from '../../components/Home/HomeCarousel'
+import MenuCinema from '../../components/Home/MenuCinema'
+import LoadingPage from '../LoadingPage'
+import {  callApiFilm, getFilmList } from '../../redux/reducers/FilmReducer'
+import { LayHeThongRapChieu } from '../../redux/reducers/CinemaReducer'
+import { history } from '../../utils/history'
+import { LayThongTinLichChieuHeThongRap } from '../../services/CinemaService'
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true)
@@ -21,15 +20,8 @@ export default function Home() {
         history.listen(() => {
             window.scrollTo(0, 0);
         });
-        const callApiFilmList = async() => {
-            try {
-                const apiFilmList = await LayDanhSachPhim()
-                dispatch(getFilmList(apiFilmList.data.content))
-            } catch (error) {
-               console.log(error)
-            }
-        }
-        callApiFilmList()
+        dispatch(callApiFilm)
+        
         const getApiHeThongRapChieu = async() => {
             try {
                 const apiHeThongRap = await LayThongTinLichChieuHeThongRap()

@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
-import useRoute from '../hooks/useRoute'
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import { kiemTraDinhDang, kiemTraDoDai, kiemTraRong } from '../utils/validation';
-import { SwalConfig } from '../utils/config';
-import { DangKy } from '../services/UserService';
+import useRoute from '../../hooks/useRoute';
+import { kiemTraDinhDang, kiemTraDoDai, kiemTraRong } from '../../utils/validation';
+import { SwalConfig } from '../../utils/config';
+import { DangKy } from '../../services/UserService';
+import { GROUPID } from '../../utils/constant';
 
 export default function Register() {
 
@@ -17,7 +18,7 @@ export default function Register() {
             hoTen: '',
             email: '',
             soDt: '',
-            maNhom: 'GP00'
+            maNhom: GROUPID
         },
         err: {
             taiKhoan: '',

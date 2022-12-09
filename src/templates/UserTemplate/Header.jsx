@@ -9,7 +9,7 @@ import { getLocalStorage, removeLocalStorage, SwalConfig } from '../../utils/con
 import { useDispatch, useSelector } from 'react-redux'
 import { setStatusLogin } from '../../redux/reducers/UserReducer'
 import { LOCALSTORAGE_USER } from '../../utils/constant'
-import { LayThongTinTaiKhoan } from '../../services/UserService'
+
 
 export default () => {
 
