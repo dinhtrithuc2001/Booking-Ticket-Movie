@@ -52,6 +52,7 @@ export default UserReducer.reducer
 export const callApiThongTinNguoiDung = async (dispatch) => {
     try {
         const apiNguoiDung = await LayThongTinTaiKhoan()
+        console.log(apiNguoiDung.data.content)
         dispatch(setStatusLogin(true))
         dispatch(setUserInfor(apiNguoiDung.data.content))
     } catch (error) {
