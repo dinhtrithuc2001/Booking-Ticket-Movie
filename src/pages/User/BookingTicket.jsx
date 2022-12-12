@@ -24,7 +24,8 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
     const { danhSachGheDangDat } = useSelector(state => state.BookingReducer)
     const renderSeats = () => {
         return danhSachGhe.map((itemGhe, index) => {
-
+            let sizeScreen = window.screen.width
+            let size = 16
             let classGheVip = itemGhe.loaiGhe == 'Vip' ? 'gheVip' : ''
             let classGheDaDat = itemGhe.daDat == true ? 'gheDaDat' : ''
             let classGheDangDat = ''
@@ -40,14 +41,34 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
             if (thongTinNguoiDung.taiKhoan == itemGhe.taiKhoanNguoiDat) {
                 classGheDaDuocTaiKhoanDat = 'gheDaDuocTaiKhoanNayDat'
             }
-
+            console.log(sizeScreen)
+            if( 1092 < sizeScreen && sizeScreen <= 1247){   
+                console.log('con me no') 
+                size = 14
+            }
+            if( 783 < sizeScreen && sizeScreen <= 1092 ){
+                console.log('con me no') 
+                size = 12
+            }
+            if( 650 < sizeScreen && sizeScreen <= 783 ){
+                size = 10
+            }
+            if (530 < sizeScreen && sizeScreen <= 650) {
+                size = 8
+            }
+            if (390 < sizeScreen && sizeScreen <= 530) {
+                size = 6
+            }
+            if (sizeScreen <= 390) {
+                size = 4
+            }
 
             return <Fragment key={index}>
                 <button disabled={daDat} onClick={() => dispatch(datGhe(itemGhe))}
                     className={`ghe ${classGheVip} ${classGheDaDat} ${classGheDangDat} ${classGheDaDuocTaiKhoanDat}`}>
                     {itemGhe.daDat ? classGheDaDuocTaiKhoanDat == '' ? <FontAwesomeIcon icon={faXmark} /> : <FontAwesomeIcon icon={faUserTag} /> : itemGhe.stt}
                 </button>
-                {(index + 1) % 16 == 0 ? <br /> : ''}
+                {(index + 1) % size == 0 ? <br /> : ''}
             </Fragment>
         })
     }
@@ -82,9 +103,9 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
 
 
     return (
-        <div className='container min-h-[100vh]'>
+        <div className='min-h-[100vh]'>
             <div className="grid grid-cols-12 z-[1] pb-2">
-                <div className="col-span-9">
+                <div className="col-span-12 xl:col-span-10 2xl:col-span-9">
                     <div className='flex justify-center relative mb-2'>
                         <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[2] uppercase font-bold tracking-wider text-white'>Screen</div>
                         <div className='trapezoid'></div>
@@ -92,8 +113,8 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
                     <div className='text-center'>
                         {renderSeats()}
                     </div>
-                    <div className='mt-5 flex justify-center'>
-                        <table className='divide-y divide-gray-200 w-2/3'>
+                    <div className='mt-5 md:flex md:justify-center hidden'>
+                        <table className='divide-y divide-gray-200 w-full'>
                             <thead className='bg-gray-50 p-5'>
                                 <tr>
                                     <th>Ghế đã đặt</th>
@@ -119,7 +140,7 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
                         </table>
                     </div>
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-12 xl:col-span-2 2xl:col-span-3">
                     <h3 className='text-orange-500 text-center text-2xl'>
                         {danhSachGheDangDat.reduce((tong, ghe) => {
                             return tong += ghe.giaVe
@@ -130,7 +151,7 @@ const BookingTicket = (thongTinNguoiDung, id, setIsLoading) => {
                         <h3 className='text-lg mb-2 tracking-wide font-semibold'>{thongTinPhim.tenPhim}</h3>
                         <p className='mb-2'>{thongTinPhim.tenCumRap} - {thongTinPhim.tenRap}</p>
                         <p className='mb-2'>Địa điểm: {thongTinPhim.diaChi}</p>
-                        <p>Ngày chiếu: {thongTinPhim.ngayChieu} - {thongTinPhim.gioChieu}</p>
+                        <p>Ngày chiếu: {thongTinPhim.ngayChieu} </p>
                     </div>
                     <hr />
                     <div className="flex flex-row my-5 items-center">
@@ -178,7 +199,7 @@ const KetQuaDatVe = (thongTinNguoiDung) => {
                     <div className="flex-grow">
                         <h2 className="text-gray-900 title-font font-medium">{item.tenPhim}</h2>
                         <h2 className="text-gray-700 title-font font-medium">{_.first(item.danhSachGhe).tenHeThongRap} - {_.first(item.danhSachGhe).tenCumRap}</h2>
-                        <p className="text-gray-500">Ngày giờ chiếu: {moment(item.ngayDat).format('DD-MM-YYYY ~ hh:MM:A')}</p>
+                        <p className="text-gray-500">Ngày đặt: {moment(item.ngayDat).format('DD-MM-YYYY ~ hh:MM:A')}</p>
                         <p className="text-gray-500">Thời lượng: {item.thoiLuongPhim} phút</p>
                         <p>Ghế: {item.danhSachGhe.map((ghe, iGhe) => {
                             return <button key={iGhe} className='mb-2 text-orange-600 font-semibold text-lg mx-1 px-1 border-orange-100'>{ghe.tenGhe}</button>
@@ -203,7 +224,7 @@ const KetQuaDatVe = (thongTinNguoiDung) => {
 }
 
 export default () => {
-    const { thongTinNguoiDung, tabActive } = useSelector(state => state.UserReducer)
+    const { thongTinNguoiDung } = useSelector(state => state.UserReducer)
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = useState(true)
     const { param, navigate } = useRoute()

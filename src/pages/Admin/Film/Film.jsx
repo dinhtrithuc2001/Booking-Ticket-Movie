@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Table, Input, Button } from 'antd';
+import { Table, Input, Button, Tooltip } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { callApiFilm, callApiXoaPhim } from '../../../redux/reducers/FilmReducer';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { EditOutlined, DeleteOutlined, CalendarOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2'
 
 const { Search } = Input;
@@ -91,31 +91,38 @@ export default function Film() {
             dataIndex: 'hanhDong',
             render: (text, film) => {
                 return <>
-                    <NavLink key={1} className='bg-dark text-blue-600 mr-3 text-2xl ' to={`/admin/film/edit/${film.maPhim}`}><EditOutlined /></NavLink>
-                    <button onClick={() => {
-                        Swal.fire({
-                            title: 'Bạn có muốn xóa phim này không ?',
-                            showDenyButton: true,
-                            confirmButtonText: 'Đồng ý',
-                            denyButtonText: 'Hủy',
-                            icon: 'question',
-                            iconColor: 'rgb(104 217 254)',
-                            confirmButtonColor: '#f97316'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                dispatch(callApiXoaPhim(film.maPhim))
-                            }
-                        })
-                    }} key={2} className='bg-dark text-red-600 text-2xl hover:text-red-400'><DeleteOutlined /></button>
+                    <Tooltip placement="leftBottom" title={'Chỉnh sửa phim'}>
+                        <NavLink key={1} className='bg-dark text-blue-600 mr-3 text-2xl ' to={`/admin/film/edit/${film.maPhim}`}><EditOutlined /></NavLink>
+                    </Tooltip>
+                    <Tooltip placement="bottom" title={'Xóa phim'}>
+                        <button onClick={() => {
+                            Swal.fire({
+                                title: 'Bạn có muốn xóa phim này không ?',
+                                showDenyButton: true,
+                                confirmButtonText: 'Đồng ý',
+                                denyButtonText: 'Hủy',
+                                icon: 'question',
+                                iconColor: 'rgb(104 217 254)',
+                                confirmButtonColor: '#f97316'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    dispatch(callApiXoaPhim(film.maPhim))
+                                }
+                            })
+                        }} key={2} className='bg-dark text-red-600 text-2xl hover:text-red-400'><DeleteOutlined /></button>
+                    </Tooltip>
+                    <Tooltip placement="topRight" title={'Tạo lịch chiếu'}>
+                        <NavLink key={3} className='bg-dark text-orange-600 hover:text-orange-400 ml-3 text-2xl ' to={`/admin/film/showtime/${film.maPhim}/${film.tenPhim}`}><CalendarOutlined /></NavLink>
+                    </Tooltip>
                 </>
             },
-            width: 120
+            width: 150
         },
     ];
     return <div className='adminFilm'>
         <h2 className='text-2xl uppercase font-bold mb-4'>Quản lý Phim</h2>
 
-        <Button onClick={() => navigate('/admin/film/addnew')} className='mb-4 font-semibold border-black'>Thêm phim</Button>
+        <Button onClick={() => navigate('/admin/film/addnewfilm')} className='mb-4 font-semibold border-black'>Thêm phim</Button>
 
         <Search
             className='mb-4'

@@ -1,15 +1,9 @@
-import {
-    DatePicker,
-    Form,
-    Input,
-    InputNumber,
-    Switch,
-} from 'antd';
+import {DatePicker,Form,Input,InputNumber,Switch} from 'antd';
 import React from 'react';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { useState } from 'react';
-import { callApiThongTinPhim, capNhatPhim, themPhimApi } from '../../../redux/reducers/FilmReducer';
+import { callApiThongTinPhim, capNhatPhim } from '../../../redux/reducers/FilmReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { GROUPID } from '../../../utils/constant';
 import { useEffect } from 'react';
@@ -20,7 +14,7 @@ export default () => {
     const { thongTinPhim } = useSelector(state => state.FilmReducer)
     const [imgSrc, setImgSrc] = useState('')
     const dispatch = useDispatch()
-    const { param, navigate } = useRoute()
+    const { param } = useRoute()
     const dateFormat = 'DD/MM/YYYY';
     useEffect(() => {
         dispatch(callApiThongTinPhim(param.id))

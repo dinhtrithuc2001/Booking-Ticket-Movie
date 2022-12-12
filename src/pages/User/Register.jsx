@@ -62,7 +62,7 @@ export default function Register() {
         try {
             await DangKy(userRegister)
             SwalConfig('Đăng ký thành công', 'success', false)
-            navigate('/login')
+            navigate('/login')  
         } catch (error) {
             SwalConfig(error.response.data.content, 'error', true, 3000)
         }

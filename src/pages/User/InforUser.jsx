@@ -9,28 +9,28 @@ import _ from "lodash";
 
 const ThongTinNguoiDung = (thongTinNguoiDung) => {
     return <div className='h-[100vh] relative'>
-        <section className="p-6 bg-gray-500 w-[60%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg">
+        <section className="p-6 bg-gray-500 w-full md:w-[80%] lg:w-[60%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg">
             <h2 className='text-white font-bold text-2xl mb-4'>Thông tin tài khoản</h2>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-4'>
                 <div>
                     <p className='font-semibold text-[17px] mb-1'>Tài khoản</p>
-                    <input type="text" value={thongTinNguoiDung.taiKhoan} className='p-2 border-none w-full rounded-sm text-[16px]' />
+                    <input readOnly type="text" value={thongTinNguoiDung?.taiKhoan} className='p-2 border-none w-full rounded-sm text-[16px]' />
                 </div>
                 <div>
                     <p className='font-semibold text-[17px] mb-1'>Email</p>
-                    <input type="text" value={thongTinNguoiDung.email} className='p-2 border-none w-full rounded-sm text-[16px]' />
+                    <input readOnly type="text" value={thongTinNguoiDung?.email} className='p-2 border-none w-full rounded-sm text-[16px]' />
                 </div>
                 <div>
                     <p className='font-semibold text-[17px] mb-1'>Số điện thoại</p>
-                    <input type="text" value={thongTinNguoiDung.soDT} className='p-2 border-none w-full rounded-sm text-[16px]' />
+                    <input readOnly type="text" value={thongTinNguoiDung?.soDT} className='p-2 border-none w-full rounded-sm text-[16px]' />
                 </div>
                 <div>
                     <p className='font-semibold text-[17px] mb-1'>Họ tên</p>
-                    <input type="text" value={thongTinNguoiDung.hoTen} className='p-2 border-none w-full rounded-sm text-[16px]' />
+                    <input readOnly type="text" value={thongTinNguoiDung?.hoTen} className='p-2 border-none w-full rounded-sm text-[16px]' />
                 </div>
                 <div>
                     <p className='font-semibold text-[17px] mb-1'>Loại tài khoản</p>
-                    <input type="text" value={thongTinNguoiDung.maLoaiNguoiDung} className='p-2 border-none w-full rounded-sm text-[16px]' />
+                    <input readOnly type="text" value={thongTinNguoiDung?.maLoaiNguoiDung} className='p-2 border-none w-full rounded-sm text-[16px]' />
                 </div>
             </div>
         </section>
@@ -46,7 +46,7 @@ const KetQuaDatVe = (thongTinNguoiDung) => {
                     <div className="flex-grow">
                         <h2 className="text-gray-900 title-font font-medium">{item.tenPhim}</h2>
                         <h2 className="text-gray-700 title-font font-medium">{_.first(item.danhSachGhe).tenHeThongRap} - {_.first(item.danhSachGhe).tenCumRap}</h2>
-                        <p className="text-gray-500">Ngày giờ chiếu: {moment(item.ngayDat).format('DD-MM-YYYY ~ hh:MM:A')}</p>
+                        <p className="text-gray-500">Ngày đặt: {moment(item.ngayDat).format('DD-MM-YYYY ~ hh:MM:A')}</p>
                         <p className="text-gray-500">Thời lượng: {item.thoiLuongPhim} phút</p>
                         <p>Ghế: {item.danhSachGhe.map((ghe, iGhe) => {
                             return <button key={iGhe} className='mb-2 text-orange-600 font-semibold text-lg mx-1 px-1 border-orange-100'>{ghe.tenGhe}</button>
@@ -71,7 +71,7 @@ const KetQuaDatVe = (thongTinNguoiDung) => {
 }
 
 
-export default function InforUser() {
+export default () => {
     const { thongTinNguoiDung, isLogin } = useSelector(state => state.UserReducer)
     const dispatch = useDispatch()
 
@@ -80,12 +80,13 @@ export default function InforUser() {
     }, [])
 
     const items = [
-        { label: '01. THÔNG TIN NGƯỜI DÙNG', key: 1, children: ThongTinNguoiDung(thongTinNguoiDung) },
-        { label: '02. LỊCH SỬ ĐẶT VÉ', key: 2, children: KetQuaDatVe(thongTinNguoiDung) },
+        { label: <span className='text-[11px] sm:text-[14px]'>01. THÔNG TIN NGƯỜI DÙNG</span>, key: 1, children: ThongTinNguoiDung(thongTinNguoiDung) },
+        { label: <span className='text-[11px] sm:text-[14px]'>02. LỊCH SỬ ĐẶT VÉ</span>, key: 2, children: KetQuaDatVe(thongTinNguoiDung) },
     ];
+    
     return (
         <>
-            {isLogin ? <Tabs className='mt-[6rem]  pb-2 min-h-[100vh] booking' items={items} /> : <NotFound />}
+            {isLogin ? <Tabs className='pt-[6rem] min-h-[100vh] booking' items={items} /> : <NotFound />}
         </>
 
     )
